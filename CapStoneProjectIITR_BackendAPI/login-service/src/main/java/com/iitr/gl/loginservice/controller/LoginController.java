@@ -3,6 +3,8 @@ package com.iitr.gl.loginservice.controller;
 import com.iitr.gl.loginservice.model.LoginDetail;
 import com.iitr.gl.loginservice.repository.MySqlLoginRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/")
+@RefreshScope
 public class LoginController
 {
     private final MySqlLoginRepository mySqlLoginRepository;
@@ -22,5 +25,13 @@ public class LoginController
            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("User not found"));
        }
        else return ResponseEntity.status(HttpStatus.FOUND).body(("User found"));
+    }
+
+    @Value("${testvalue}")
+    private String value;
+    @GetMapping("/test")
+    public String test()
+    {
+        return value;
     }
 }
