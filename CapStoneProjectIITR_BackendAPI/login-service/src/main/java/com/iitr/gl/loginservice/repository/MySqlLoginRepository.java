@@ -1,6 +1,5 @@
 package com.iitr.gl.loginservice.repository;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.iitr.gl.loginservice.model.LoginDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

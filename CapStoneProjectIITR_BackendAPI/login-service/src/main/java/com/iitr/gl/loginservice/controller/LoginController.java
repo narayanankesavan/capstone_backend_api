@@ -13,25 +13,21 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/")
 @RefreshScope
-public class LoginController
-{
+public class LoginController {
     private final MySqlLoginRepository mySqlLoginRepository;
-    @PostMapping(path = "/patient/login", produces = {"application/json"})
-    public ResponseEntity<String> getLoginDetails(@RequestBody LoginDetail loginDetail)
-    {
-       LoginDetail result = mySqlLoginRepository.findUserByEmail(loginDetail.getUser_email());
-       if(result==null)
-       {
-           return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("User not found"));
-       }
-       else return ResponseEntity.status(HttpStatus.FOUND).body(("User found"));
-    }
-
     @Value("${testvalue}")
     private String value;
+
+    @PostMapping(path = "/patient/login", produces = {"application/json"})
+    public ResponseEntity<String> getLoginDetails(@RequestBody LoginDetail loginDetail) {
+        LoginDetail result = mySqlLoginRepository.findUserByEmail(loginDetail.getUser_email());
+        if (result == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("User not found"));
+        } else return ResponseEntity.status(HttpStatus.FOUND).body(("User found"));
+    }
+
     @GetMapping("/test")
-    public String test()
-    {
+    public String test() {
         return value;
     }
 }

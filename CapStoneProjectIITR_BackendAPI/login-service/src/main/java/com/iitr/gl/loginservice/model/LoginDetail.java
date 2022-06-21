@@ -1,7 +1,6 @@
 package com.iitr.gl.loginservice.model;
 
 
-import com.iitr.gl.loginservice.repository.MySqlLoginRepository;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,8 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Builder
 @Data
-public class LoginDetail
-{
+public class LoginDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long user_id;
