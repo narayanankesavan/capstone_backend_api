@@ -1,0 +1,3 @@
+{
+  "spring.data.mongodb.uri": "mongodb+srv://iitr-capstoneBackendAPI:5TgpxDBcw3sFGF5g@cluster0.binjlle.mongodb.net/patientDocuments?retryWrites=true&w=majority"
+}
