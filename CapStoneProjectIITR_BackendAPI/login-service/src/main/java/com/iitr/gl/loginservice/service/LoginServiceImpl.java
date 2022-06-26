@@ -13,15 +13,16 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 
 @Service
-public class LoginServiceImpl implements LoginService{
+public class LoginServiceImpl implements LoginService {
 
     @Autowired
     MySqlLoginRepository mySqlLoginRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity userEntity = mySqlLoginRepository.findByEmail(username);
 
-        if(userEntity == null)
+        if (userEntity == null)
             throw new UsernameNotFoundException(username);
         else
             return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), true, true, true, true, new ArrayList<>());
@@ -30,7 +31,7 @@ public class LoginServiceImpl implements LoginService{
     @Override
     public UserDto getUserByEmail(String email) {
         UserEntity userEntity = mySqlLoginRepository.findByEmail(email);
-        if(userEntity == null)
+        if (userEntity == null)
             throw new UsernameNotFoundException(email);
         else
             return new ModelMapper().map(userEntity, UserDto.class);
