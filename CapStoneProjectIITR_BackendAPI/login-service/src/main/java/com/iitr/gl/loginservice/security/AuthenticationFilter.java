@@ -1,13 +1,11 @@
 package com.iitr.gl.loginservice.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.iitr.gl.loginservice.data.MySqlLoginRepository;
 import com.iitr.gl.loginservice.service.LoginService;
 import com.iitr.gl.loginservice.shared.UserDto;
 import com.iitr.gl.loginservice.ui.model.UserLoginDetailRequest;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,8 +27,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     LoginService loginService;
     Environment environment;
 
-    public AuthenticationFilter(AuthenticationManager authenticationManager, LoginService loginService, Environment environment)
-    {
+    public AuthenticationFilter(AuthenticationManager authenticationManager, LoginService loginService, Environment environment) {
         this.environment = environment;
         this.loginService = loginService;
         super.setAuthenticationManager(authenticationManager);
@@ -54,7 +51,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
 
-        String userEmail = ((User)(authResult.getPrincipal())).getUsername();
+        String userEmail = ((User) (authResult.getPrincipal())).getUsername();
         System.out.println(userEmail + " &&&&&&&&&&&&&&&&&&&&&&&&&&&&");
         UserDto userDto = loginService.getUserByEmail(userEmail);
 

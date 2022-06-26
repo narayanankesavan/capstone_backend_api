@@ -1,7 +1,6 @@
 package com.iitr.gl.loginservice.ui.model;
 
-public class UserLoginDetailRequest
-{
+public class UserLoginDetailRequest {
     private String email;
     private String password;
 
