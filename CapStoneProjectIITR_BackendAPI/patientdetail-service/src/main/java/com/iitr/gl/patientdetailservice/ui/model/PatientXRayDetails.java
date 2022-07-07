@@ -1,4 +1,4 @@
-package com.iitr.gl.patientdetailservice.model;
+package com.iitr.gl.patientdetailservice.ui.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
