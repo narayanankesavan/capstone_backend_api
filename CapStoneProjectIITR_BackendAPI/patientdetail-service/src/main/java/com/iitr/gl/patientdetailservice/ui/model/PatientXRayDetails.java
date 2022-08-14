@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(value = "xrayDetails")
+/*@Document(value = "xrayDetails")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Data
+@Data*/
 public class PatientXRayDetails {
     @Id
     private String patientId;

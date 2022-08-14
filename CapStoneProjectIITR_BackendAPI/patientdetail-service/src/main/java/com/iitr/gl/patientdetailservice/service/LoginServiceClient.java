@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @FeignClient(name = "loginservice")
 public interface LoginServiceClient {
-    @GetMapping("/login_service/testss")
+    @GetMapping("/login_service/test")
     @CircuitBreaker(name = "loginservice", fallbackMethod = "testRemoteFallback")
     public String testRemote();
 
