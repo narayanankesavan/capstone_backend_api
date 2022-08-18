@@ -24,6 +24,9 @@ public class UserEntity implements Serializable {
     @Column(nullable = false, unique = true)
     private String encryptedPassword;
 
+    @Column(nullable = false)
+    private boolean adminUser;
+
     public long getId() {
         return id;
     }
@@ -70,6 +73,14 @@ public class UserEntity implements Serializable {
 
     public void setEncryptedPassword(String encryptedPassword) {
         this.encryptedPassword = encryptedPassword;
+    }
+
+    public boolean getAdminUser() {
+        return adminUser;
+    }
+
+    public void setAdminUser(boolean adminUser) {
+        this.adminUser = adminUser;
     }
 
     @Override

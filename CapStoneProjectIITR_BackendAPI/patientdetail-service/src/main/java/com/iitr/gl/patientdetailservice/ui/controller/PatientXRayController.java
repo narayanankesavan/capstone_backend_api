@@ -2,22 +2,28 @@ package com.iitr.gl.patientdetailservice.ui.controller;
 
 import com.iitr.gl.patientdetailservice.data.PatientXRayMongoDBRepository;
 import com.iitr.gl.patientdetailservice.service.LoginServiceClient;
-import com.iitr.gl.patientdetailservice.service.PatientXRayDownloadService;
+import com.iitr.gl.patientdetailservice.service.PatientDetailServiceImpl;
 import com.iitr.gl.patientdetailservice.shared.DownloadXRayDto;
-import com.iitr.gl.patientdetailservice.ui.model.DownloadXRayModel;
+import com.iitr.gl.patientdetailservice.shared.UploadXRayDetailDto;
+import com.iitr.gl.patientdetailservice.ui.model.DownloadXRayRequestModel;
 import com.iitr.gl.patientdetailservice.ui.model.PatientXRayDetails;
+import com.iitr.gl.patientdetailservice.ui.model.UploadXRayRequestModel;
+import com.iitr.gl.patientdetailservice.ui.model.UploadXRayResponseModel;
 import lombok.RequiredArgsConstructor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/patient_detail/")
@@ -31,7 +37,7 @@ public class PatientXRayController {
     LoginServiceClient loginServiceClient;
 
     @Autowired
-    PatientXRayDownloadService patientXRayDownloadService;
+    PatientDetailServiceImpl patientDetailServiceImpl;
 
     @PostMapping("/addDetail")
     public void addXRayDetail(@RequestBody PatientXRayDetails patientXRayDetails) {
@@ -58,14 +64,51 @@ public class PatientXRayController {
     }
 
     @PostMapping("/downloadXray")
-    public ResponseEntity<ByteArrayResource> downloadXray(@RequestBody DownloadXRayModel downloadXRayModel) throws Exception
+    public ResponseEntity<ByteArrayResource> downloadXray(@RequestBody DownloadXRayRequestModel downloadXRayRequestModel)
     {
-        DownloadXRayDto file = patientXRayDownloadService.downloadFile(downloadXRayModel);
 
+        DownloadXRayDto file = patientDetailServiceImpl.downloadXray(downloadXRayRequestModel);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("image/jpeg"))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
                 .body(new ByteArrayResource(file.getFile()));
+    }
+
+    @PostMapping("/viewXray")
+    public ResponseEntity<String> viewXray(@RequestBody DownloadXRayRequestModel downloadXRayRequestModel)
+    {
+        DownloadXRayDto file = patientDetailServiceImpl.downloadXray(downloadXRayRequestModel);
+        return ResponseEntity.ok()
+                .body(Base64Utils.encodeToString(file.getFile()));
+    }
+
+    @PostMapping("/uploadXray")
+    public ResponseEntity<UploadXRayResponseModel> uploadXray(@RequestBody UploadXRayRequestModel requestModel)
+    {
+        UploadXRayDetailDto uploadXRayDetailDto = new UploadXRayDetailDto();
+        UploadXRayResponseModel response = new UploadXRayResponseModel();
+
+        if(!requestModel.getXrayType().equalsIgnoreCase("pneumonia")) {
+            response.setMessage("Invalid xray type");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).
+                    body(response);
+        }
+        uploadXRayDetailDto.setXrayType(requestModel.getXrayType());
+        uploadXRayDetailDto.setUserId(requestModel.getUserId());
+        uploadXRayDetailDto.setXrayId(UUID.randomUUID().toString());
+        uploadXRayDetailDto.setFileName(requestModel.getFileName());
+        uploadXRayDetailDto.setFileData(requestModel.getFileData());
+        patientDetailServiceImpl.uploadXRay(uploadXRayDetailDto);
+        response.setMessage("xray successfully saved");
+        response.setXrayId(uploadXRayDetailDto.getXrayId());
+        return ResponseEntity.status(HttpStatus.OK).
+            body(response);
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<String> deleteXray(@RequestBody DownloadXRayRequestModel downloadXRayRequestModel)
+    {
+        return null;
     }
 
     /*@GetMapping("/download/{id}")

@@ -13,6 +13,8 @@ public class UserDto implements Serializable {
     private String password;
     private String encryptedPassword;
 
+    private boolean adminUser;
+
     public String getFirstName() {
         return firstName;
     }
@@ -59,5 +61,13 @@ public class UserDto implements Serializable {
 
     public void setEncryptedPassword(String encryptedPassword) {
         this.encryptedPassword = encryptedPassword;
+    }
+
+    public boolean getAdminUser() {
+        return adminUser;
+    }
+
+    public void setAdminUser(boolean adminUser) {
+        this.adminUser = adminUser;
     }
 }

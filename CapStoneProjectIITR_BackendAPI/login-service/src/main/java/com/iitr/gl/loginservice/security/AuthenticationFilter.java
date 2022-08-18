@@ -62,5 +62,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 compact();
 
         response.setHeader("authToken", jwtToken);
+        response.setHeader("userId", userDto.getUserId());
     }
 }
