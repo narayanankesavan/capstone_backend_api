@@ -1,22 +1,24 @@
 package com.iitr.gl.userdetailservice.service;
 
-import com.iitr.gl.userdetailservice.data.PatientXrayDetailDocument;
-import com.iitr.gl.userdetailservice.data.PatientXRayMongoDBRepository;
+import com.iitr.gl.userdetailservice.data.XRayDetailDocument;
+import com.iitr.gl.userdetailservice.data.XRayDetailMongoDBRepository;
 import com.iitr.gl.userdetailservice.data.XRayDetailEntity;
 import com.iitr.gl.userdetailservice.data.XRayDetailMySqlRepository;
 import com.iitr.gl.userdetailservice.shared.DownloadFileDto;
+import com.iitr.gl.userdetailservice.shared.GenericDto;
 import com.iitr.gl.userdetailservice.shared.UploadFileDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
 public class UserDashboardServiceImpl implements UserDashboardService
 {
     @Autowired
-    private PatientXRayMongoDBRepository patientXRayMongoDBRepository;
+    private XRayDetailMongoDBRepository xRayDetailMongoDBRepository;
 
     @Autowired
     private XRayDetailMySqlRepository xRayDetailMySqlRepository;
@@ -26,7 +28,7 @@ public class UserDashboardServiceImpl implements UserDashboardService
 
         XRayDetailEntity xRayDetailEntity = xRayDetailMySqlRepository.findByXrayIdAndUserId(downloadFileDto.getXrayId(), downloadFileDto.getUserId());
 
-        Optional<PatientXrayDetailDocument> gridFSFile = patientXRayMongoDBRepository.findByxrayId(downloadFileDto.getXrayId());;
+        Optional<XRayDetailDocument> gridFSFile = xRayDetailMongoDBRepository.findByxrayId(downloadFileDto.getXrayId());;
         downloadFileDto = null;
         System.out.println(gridFSFile);
         if(gridFSFile.isPresent()) {
@@ -50,16 +52,28 @@ public class UserDashboardServiceImpl implements UserDashboardService
         xRayDetailEntity.setXrayType(uploadFileDto.getXrayType());
         xRayDetailEntity.setXrayId(uploadFileDto.getXrayId());
 
-        PatientXrayDetailDocument patientXrayDetailDocument = new PatientXrayDetailDocument();
-        patientXrayDetailDocument.setXrayId(uploadFileDto.getXrayId());
-        patientXrayDetailDocument.setHaspneumonia("Processing");
-        patientXrayDetailDocument.setFilename(uploadFileDto.getFileName());
-        patientXrayDetailDocument.setData(Base64Utils.decodeFromString(uploadFileDto.getFileData()));
+        XRayDetailDocument xrayDetailDocument = new XRayDetailDocument();
+        xrayDetailDocument.setXrayId(uploadFileDto.getXrayId());
+        xrayDetailDocument.setHaspneumonia("Processing");
+        xrayDetailDocument.setFilename(uploadFileDto.getFileName());
+        xrayDetailDocument.setData(Base64Utils.decodeFromString(uploadFileDto.getFileData()));
 
 
-        patientXRayMongoDBRepository.save(patientXrayDetailDocument);
+        xRayDetailMongoDBRepository.save(xrayDetailDocument);
         xRayDetailMySqlRepository.save(xRayDetailEntity);
 
         return null;
+    }
+
+    @Override
+    @Transactional
+    public String deleteFile(GenericDto genericDto) {
+        XRayDetailEntity xRayDetailEntity = xRayDetailMySqlRepository.findByXrayIdAndUserId(genericDto.getXrayId(), genericDto.getUserId());
+
+        if(xRayDetailEntity !=null && xRayDetailEntity.getXrayType().equalsIgnoreCase("pneumonia")) {
+            xRayDetailMongoDBRepository.deleteByXrayId(xRayDetailEntity.getXrayId());
+            xRayDetailMySqlRepository.deleteByXrayId(xRayDetailEntity.getXrayId());
+        }
+        return "Deleted successfully";
     }
 }

@@ -1,9 +1,11 @@
 package com.iitr.gl.userdetailservice.ui.model;
 
-public class UploadFileResponseModel {
+public class GenericRequestModel {
 
-    private String message;
     private String xrayId;
+
+    private String userId;
+
     private String scriptId;
 
     public String getScriptId() {
@@ -14,12 +16,12 @@ public class UploadFileResponseModel {
         this.scriptId = scriptId;
     }
 
-    public String getMessage() {
-        return message;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getXrayId() {

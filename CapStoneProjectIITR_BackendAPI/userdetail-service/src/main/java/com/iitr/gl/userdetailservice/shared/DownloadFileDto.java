@@ -4,13 +4,17 @@ public class DownloadFileDto
 {
     private String filename;
     private byte[] file;
-
     private String haspneumonia;
-
     private String xrayId;
-
     private String userId;
+    private String scriptId;
+    public String getScriptId() {
+        return scriptId;
+    }
 
+    public void setScriptId(String scriptId) {
+        this.scriptId = scriptId;
+    }
     public String getUserId() {
         return userId;
     }

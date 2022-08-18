@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(value = "pneumonia_detection")
-public class PatientXrayDetailDocument {
+public class XRayDetailDocument {
     @Id
     private String patientId;
     private byte[] data;

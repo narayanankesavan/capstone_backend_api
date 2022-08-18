@@ -8,6 +8,15 @@ public class UploadFileDto
     private String userId;
     private String xrayType;
     private String message;
+    private String scriptId;
+
+    public String getScriptId() {
+        return scriptId;
+    }
+
+    public void setScriptId(String scriptId) {
+        this.scriptId = scriptId;
+    }
 
     public String getFileName() {
         return fileName;

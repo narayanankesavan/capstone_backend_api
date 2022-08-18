@@ -1,11 +1,12 @@
 package com.iitr.gl.userdetailservice.ui.controller;
 
-import com.iitr.gl.userdetailservice.data.PatientXRayMongoDBRepository;
+import com.iitr.gl.userdetailservice.data.XRayDetailMongoDBRepository;
 import com.iitr.gl.userdetailservice.service.LoginServiceClient;
 import com.iitr.gl.userdetailservice.service.UserDashboardServiceImpl;
 import com.iitr.gl.userdetailservice.shared.DownloadFileDto;
+import com.iitr.gl.userdetailservice.shared.GenericDto;
 import com.iitr.gl.userdetailservice.shared.UploadFileDto;
-import com.iitr.gl.userdetailservice.ui.model.DownloadFileRequestModel;
+import com.iitr.gl.userdetailservice.ui.model.GenericRequestModel;
 import com.iitr.gl.userdetailservice.ui.model.UploadFileRequestModel;
 import com.iitr.gl.userdetailservice.ui.model.UploadFileResponseModel;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ import java.util.UUID;
 @RequestMapping("/user_detail/")
 @RequiredArgsConstructor
 public class UserDashboardController {
-    private final PatientXRayMongoDBRepository patientXRayMongoDBRepository;
+    private final XRayDetailMongoDBRepository XRayDetailMongoDBRepository;
     Logger loggerFactory = LoggerFactory.getLogger(UserDashboardController.class);
     @Autowired
     Environment environment;
@@ -39,7 +40,7 @@ public class UserDashboardController {
 
     @GetMapping("/{id}")
     public Object getPatientDetail(@PathVariable String id) {
-        return patientXRayMongoDBRepository.findById(id);
+        return XRayDetailMongoDBRepository.findById(id);
     }
 
     @GetMapping("/test")
@@ -57,12 +58,12 @@ public class UserDashboardController {
     }
 
     @PostMapping("/downloadXray")
-    public ResponseEntity<ByteArrayResource> downloadXray(@RequestBody DownloadFileRequestModel downloadFileRequestModel)
+    public ResponseEntity<ByteArrayResource> downloadXray(@RequestBody GenericRequestModel genericRequestModel)
     {
 
         DownloadFileDto downloadFileDto = new DownloadFileDto();
-        downloadFileDto.setXrayId(downloadFileRequestModel.getXrayId());
-        downloadFileDto.setUserId(downloadFileRequestModel.getUserId());
+        downloadFileDto.setXrayId(genericRequestModel.getXrayId());
+        downloadFileDto.setUserId(genericRequestModel.getUserId());
         DownloadFileDto file = patientDetailServiceImpl.downloadXray(downloadFileDto);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("image/jpeg"))
@@ -71,11 +72,11 @@ public class UserDashboardController {
     }
 
     @PostMapping("/viewXray")
-    public ResponseEntity<String> viewXray(@RequestBody DownloadFileRequestModel downloadFileRequestModel)
+    public ResponseEntity<String> viewXray(@RequestBody GenericRequestModel genericRequestModel)
     {
         DownloadFileDto downloadFileDto = new DownloadFileDto();
-        downloadFileDto.setXrayId(downloadFileRequestModel.getXrayId());
-        downloadFileDto.setUserId(downloadFileRequestModel.getUserId());
+        downloadFileDto.setXrayId(genericRequestModel.getXrayId());
+        downloadFileDto.setUserId(genericRequestModel.getUserId());
         DownloadFileDto file = patientDetailServiceImpl.downloadXray(downloadFileDto);
         return ResponseEntity.ok()
                 .body(Base64Utils.encodeToString(file.getFile()));
@@ -105,9 +106,12 @@ public class UserDashboardController {
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<String> deleteXray(@RequestBody DownloadFileRequestModel downloadFileRequestModel)
+    public ResponseEntity<String> deleteXray(@RequestBody GenericRequestModel genericRequestModel)
     {
-        return null;
+        GenericDto genericDto = new GenericDto();
+        genericDto.setUserId(genericRequestModel.getUserId());
+        genericDto.setXrayId(genericRequestModel.getXrayId());
+        return ResponseEntity.ok().body(patientDetailServiceImpl.deleteFile(genericDto));
     }
 
     /*@GetMapping("/download/{id}")
