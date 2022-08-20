@@ -1,7 +1,6 @@
 package com.iitr.gl.userdetailservice.shared;
 
-public class UploadFileDto
-{
+public class UploadFileDto {
     private String fileName;
     private String fileData;
     private String xrayId;

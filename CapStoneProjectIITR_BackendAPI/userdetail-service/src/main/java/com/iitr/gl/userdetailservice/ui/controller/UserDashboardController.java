@@ -7,8 +7,9 @@ import com.iitr.gl.userdetailservice.shared.DownloadFileDto;
 import com.iitr.gl.userdetailservice.shared.GenericDto;
 import com.iitr.gl.userdetailservice.shared.UploadFileDto;
 import com.iitr.gl.userdetailservice.ui.model.GenericRequestModel;
-import com.iitr.gl.userdetailservice.ui.model.UploadFileRequestModel;
-import com.iitr.gl.userdetailservice.ui.model.UploadFileResponseModel;
+import com.iitr.gl.userdetailservice.ui.model.ListUserFilesResponseModel;
+import com.iitr.gl.userdetailservice.ui.model.UploadXRayFileRequestModel;
+import com.iitr.gl.userdetailservice.ui.model.UploadXRayFileResponseModel;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,13 +59,12 @@ public class UserDashboardController {
     }
 
     @PostMapping("/downloadXray")
-    public ResponseEntity<ByteArrayResource> downloadXray(@RequestBody GenericRequestModel genericRequestModel)
-    {
+    public ResponseEntity<ByteArrayResource> downloadXray(@RequestBody GenericRequestModel genericRequestModel) {
 
         DownloadFileDto downloadFileDto = new DownloadFileDto();
         downloadFileDto.setXrayId(genericRequestModel.getXrayId());
         downloadFileDto.setUserId(genericRequestModel.getUserId());
-        DownloadFileDto file = patientDetailServiceImpl.downloadXray(downloadFileDto);
+        DownloadFileDto file = patientDetailServiceImpl.downloadXRay(downloadFileDto);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("image/jpeg"))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
@@ -72,23 +72,21 @@ public class UserDashboardController {
     }
 
     @PostMapping("/viewXray")
-    public ResponseEntity<String> viewXray(@RequestBody GenericRequestModel genericRequestModel)
-    {
+    public ResponseEntity<String> viewXray(@RequestBody GenericRequestModel genericRequestModel) {
         DownloadFileDto downloadFileDto = new DownloadFileDto();
         downloadFileDto.setXrayId(genericRequestModel.getXrayId());
         downloadFileDto.setUserId(genericRequestModel.getUserId());
-        DownloadFileDto file = patientDetailServiceImpl.downloadXray(downloadFileDto);
+        DownloadFileDto file = patientDetailServiceImpl.downloadXRay(downloadFileDto);
         return ResponseEntity.ok()
                 .body(Base64Utils.encodeToString(file.getFile()));
     }
 
     @PostMapping("/uploadXray")
-    public ResponseEntity<UploadFileResponseModel> uploadXray(@RequestBody UploadFileRequestModel requestModel)
-    {
+    public ResponseEntity<UploadXRayFileResponseModel> uploadXray(@RequestBody UploadXRayFileRequestModel requestModel) {
         UploadFileDto uploadFileDto = new UploadFileDto();
-        UploadFileResponseModel response = new UploadFileResponseModel();
+        UploadXRayFileResponseModel response = new UploadXRayFileResponseModel();
 
-        if(!requestModel.getXrayType().equalsIgnoreCase("pneumonia")) {
+        if (!requestModel.getXrayType().equalsIgnoreCase("pneumonia")) {
             response.setMessage("Invalid xray type");
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).
                     body(response);
@@ -102,31 +100,49 @@ public class UserDashboardController {
         response.setMessage("xray successfully saved");
         response.setXrayId(uploadFileDto.getXrayId());
         return ResponseEntity.status(HttpStatus.OK).
-            body(response);
+                body(response);
     }
 
-    @PostMapping("/delete")
-    public ResponseEntity<String> deleteXray(@RequestBody GenericRequestModel genericRequestModel)
-    {
+    @PostMapping("/deleteXray")
+    public ResponseEntity<String> deleteXray(@RequestBody GenericRequestModel genericRequestModel) {
         GenericDto genericDto = new GenericDto();
         genericDto.setUserId(genericRequestModel.getUserId());
         genericDto.setXrayId(genericRequestModel.getXrayId());
-        return ResponseEntity.ok().body(patientDetailServiceImpl.deleteFile(genericDto));
+        return ResponseEntity.ok().body(patientDetailServiceImpl.deleteXRay(genericDto));
     }
+
+    @PostMapping("/updateXray")
+    public ResponseEntity<String> updateXRay(@RequestBody UploadXRayFileRequestModel requestModel) {
+        UploadFileDto uploadFileDto = new UploadFileDto();
+        UploadXRayFileResponseModel response = new UploadXRayFileResponseModel();
+
+        uploadFileDto.setUserId(requestModel.getUserId());
+        uploadFileDto.setXrayId(requestModel.getXrayId());
+        uploadFileDto.setFileName(requestModel.getFileName());
+        uploadFileDto.setFileData(requestModel.getFileData());
+        return ResponseEntity.status(HttpStatus.OK).
+                body(patientDetailServiceImpl.updateXRay(uploadFileDto));
+    }
+
+    @PostMapping("/list")
+    public ResponseEntity<ListUserFilesResponseModel> listUserFiles(@RequestBody GenericRequestModel requestModel) {
+        return ResponseEntity.ok().body(
+                patientDetailServiceImpl.listUserFiles(requestModel.getUserId()));
+    }
+
 
     /*@GetMapping("/download/{id}")
     public ResponseEntity<ByteArrayResource> download(@PathVariable String id) throws IOException {
         DownloadXRayDto file = patientXRayDownloadService.downloadFile("62af038a54091e5445b857b1");
 
         return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType("image/jpeg"))
+                .contentType(MediaType.parseMediaType("image/jpeg"))bv
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
                 .body(new ByteArrayResource(file.getFile()));
     }*/
 
     @PostMapping("/getToken")
-    public void getToken(@RequestHeader("Authorization") String token)
-    {
-        System.out.println("Token : " +token);
+    public void getToken(@RequestHeader("Authorization") String token) {
+        System.out.println("Token : " + token);
     }
 }

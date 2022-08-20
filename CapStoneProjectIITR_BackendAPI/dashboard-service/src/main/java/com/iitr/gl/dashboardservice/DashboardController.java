@@ -12,39 +12,35 @@ import java.util.List;
 public class DashboardController {
 
     @PostMapping(value = "/runPy", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Object> runPythonScript(@RequestBody String body, @RequestHeader("Authorization") String token)
-    {
+    public List<Object> runPythonScript(@RequestBody String body, @RequestHeader("Authorization") String token) {
         String pythonCode = "#!/usr/bin/python\n" +
                 "import requests\n" +
                 "import base64\n" +
                 "def downloadXRayForNuemonia(patient_id):\n" +
                 "    api_url = \"http://localhost:8080/patient_detail/downloadXray\"\n" +
                 "    todo = {\"patientId\": patient_id}\n" +
-                "    headers =  {\"Authorization\": \""+ token +"\"}\n" +
+                "    headers =  {\"Authorization\": \"" + token + "\"}\n" +
                 "    response = requests.post(api_url, json=todo, headers=headers)\n" +
                 "    cc = {\"imageByteArray\": base64.b64encode(response.content)}\n" +
                 "\n" +
                 "    return cc;";
         try {
-            File tempPyhtonFile = new File( "ttSample.py");
-            String filePath= tempPyhtonFile.getAbsolutePath();
+            File tempPyhtonFile = new File("ttSample.py");
+            String filePath = tempPyhtonFile.getAbsolutePath();
             System.out.println("FilePath : " + filePath);
 
             FileWriter fileWriter = new FileWriter(filePath);
             fileWriter.write(pythonCode + body);
             fileWriter.close();
             return executePython(filePath);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
 
     }
 
-    public List<Object> executePython(String filePath)
-    {
+    public List<Object> executePython(String filePath) {
         List<Object> list = new ArrayList<>();
         try {
             String[] command = {"python", filePath};

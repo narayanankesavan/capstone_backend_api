@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LogInController {
 
     Logger logger = LoggerFactory.getLogger(LogInController.class);
+
     @GetMapping("/test")
     public String testMethod() {
         logger.info("Test endpoint of loginservice called");

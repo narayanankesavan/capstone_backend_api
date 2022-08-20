@@ -1,18 +1,8 @@
 package com.iitr.gl.userdetailservice.ui.model;
 
-public class UploadFileResponseModel {
-
+public class UploadXRayFileResponseModel {
     private String message;
     private String xrayId;
-    private String scriptId;
-
-    public String getScriptId() {
-        return scriptId;
-    }
-
-    public void setScriptId(String scriptId) {
-        this.scriptId = scriptId;
-    }
 
     public String getMessage() {
         return message;

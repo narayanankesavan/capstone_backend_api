@@ -1,13 +1,22 @@
 package com.iitr.gl.userdetailservice.ui.model;
 
-public class UploadFileRequestModel
-{
+public class UploadXRayFileRequestModel {
     private String fileData;
     private String xrayType;
 
     private String fileName;
 
     private String userId;
+
+    private String xrayId;
+
+    public String getXrayId() {
+        return xrayId;
+    }
+
+    public void setXrayId(String xrayId) {
+        this.xrayId = xrayId;
+    }
 
     public String getUserId() {
         return userId;
