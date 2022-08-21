@@ -5,24 +5,23 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-@Document(value = "pneumonia_detection")
-public class XRayDetailDocument {
+@Document(value = "tuberculosis_detection")
+public class TuberculosisXRayDocument {
     @Id
     private String patientId;
     private byte[] data;
     private String filename;
 
-    private String haspneumonia;
-
+    private String hastb;
     @Field("xrayid")
     private String xrayId;
 
-    public String getHaspneumonia() {
-        return haspneumonia;
+    public String getHastb() {
+        return hastb;
     }
 
-    public void setHaspneumonia(String haspneumonia) {
-        this.haspneumonia = haspneumonia;
+    public void setHastb(String hastb) {
+        this.hastb = hastb;
     }
 
     public String getXrayId() {

@@ -6,6 +6,8 @@ public class ListUserFilesResponseModel {
 
     public List<XRayFileModel> pneumoniaXray;
 
+    public List<XRayFileModel> tuberculosisXray;
+
     public List<ScriptFileModel> scripts;
 
     public List<XRayFileModel> getPneumoniaXray() {
@@ -14,6 +16,14 @@ public class ListUserFilesResponseModel {
 
     public void setPneumoniaXray(List<XRayFileModel> pneumoniaXray) {
         this.pneumoniaXray = pneumoniaXray;
+    }
+
+    public List<XRayFileModel> getTuberculosisXray() {
+        return tuberculosisXray;
+    }
+
+    public void setTuberculosisXray(List<XRayFileModel> tuberculosisXray) {
+        this.tuberculosisXray = tuberculosisXray;
     }
 
     public List<ScriptFileModel> getScripts() {

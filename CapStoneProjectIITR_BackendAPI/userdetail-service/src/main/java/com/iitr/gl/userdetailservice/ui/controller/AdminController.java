@@ -18,12 +18,11 @@ public class AdminController {
     AdminService adminService;
 
     @PostMapping("/upgradeUserToAdmin")
-    public String upgradeUserToAdmin(@RequestBody GenericRequestModel requestModel)
-    {
+    public String upgradeUserToAdmin(@RequestBody GenericRequestModel requestModel) {
         GenericDto dto = new GenericDto();
         dto.setUserId(requestModel.getUserId());
         HttpStatus status = adminService.upgradeUserToAdmin(dto);
-        if(status == HttpStatus.OK)
+        if (status == HttpStatus.OK)
             return "Successfully Updated";
         else
             return "User not found";

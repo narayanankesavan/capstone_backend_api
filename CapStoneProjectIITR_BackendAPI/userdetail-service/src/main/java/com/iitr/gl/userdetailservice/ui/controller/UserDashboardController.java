@@ -1,8 +1,8 @@
 package com.iitr.gl.userdetailservice.ui.controller;
 
-import com.iitr.gl.userdetailservice.data.XRayDetailMongoDBRepository;
+import com.iitr.gl.userdetailservice.data.PneumoniaXRayMongoDBRepository;
 import com.iitr.gl.userdetailservice.service.LoginServiceClient;
-import com.iitr.gl.userdetailservice.service.UserDashboardServiceImpl;
+import com.iitr.gl.userdetailservice.service.UserDashboardService;
 import com.iitr.gl.userdetailservice.shared.DownloadFileDto;
 import com.iitr.gl.userdetailservice.shared.GenericDto;
 import com.iitr.gl.userdetailservice.shared.UploadFileDto;
@@ -29,7 +29,7 @@ import java.util.UUID;
 @RequestMapping("/user_detail/")
 @RequiredArgsConstructor
 public class UserDashboardController {
-    private final XRayDetailMongoDBRepository XRayDetailMongoDBRepository;
+    private final PneumoniaXRayMongoDBRepository PneumoniaXRayMongoDBRepository;
     Logger loggerFactory = LoggerFactory.getLogger(UserDashboardController.class);
     @Autowired
     Environment environment;
@@ -37,11 +37,11 @@ public class UserDashboardController {
     LoginServiceClient loginServiceClient;
 
     @Autowired
-    UserDashboardServiceImpl patientDetailServiceImpl;
+    UserDashboardService userDashboardService;
 
     @GetMapping("/{id}")
     public Object getPatientDetail(@PathVariable String id) {
-        return XRayDetailMongoDBRepository.findById(id);
+        return PneumoniaXRayMongoDBRepository.findById(id);
     }
 
     @GetMapping("/test")
@@ -60,15 +60,19 @@ public class UserDashboardController {
 
     @PostMapping("/downloadXray")
     public ResponseEntity<ByteArrayResource> downloadXray(@RequestBody GenericRequestModel genericRequestModel) {
-
         DownloadFileDto downloadFileDto = new DownloadFileDto();
         downloadFileDto.setXrayId(genericRequestModel.getXrayId());
         downloadFileDto.setUserId(genericRequestModel.getUserId());
-        DownloadFileDto file = patientDetailServiceImpl.downloadXRay(downloadFileDto);
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType("image/jpeg"))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
-                .body(new ByteArrayResource(file.getFile()));
+        DownloadFileDto file = userDashboardService.downloadXRay(downloadFileDto);
+        if (file.getFile() != null) {
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType("image/jpeg"))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                    .body(new ByteArrayResource(file.getFile()));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(null);
+        }
     }
 
     @PostMapping("/viewXray")
@@ -76,9 +80,14 @@ public class UserDashboardController {
         DownloadFileDto downloadFileDto = new DownloadFileDto();
         downloadFileDto.setXrayId(genericRequestModel.getXrayId());
         downloadFileDto.setUserId(genericRequestModel.getUserId());
-        DownloadFileDto file = patientDetailServiceImpl.downloadXRay(downloadFileDto);
-        return ResponseEntity.ok()
-                .body(Base64Utils.encodeToString(file.getFile()));
+        DownloadFileDto file = userDashboardService.downloadXRay(downloadFileDto);
+        if (file.getFile() != null) {
+            return ResponseEntity.ok()
+                    .body(Base64Utils.encodeToString(file.getFile()));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(file.getErrorMessage());
+        }
     }
 
     @PostMapping("/uploadXray")
@@ -86,7 +95,8 @@ public class UserDashboardController {
         UploadFileDto uploadFileDto = new UploadFileDto();
         UploadXRayFileResponseModel response = new UploadXRayFileResponseModel();
 
-        if (!requestModel.getXrayType().equalsIgnoreCase("pneumonia")) {
+        if (!requestModel.getXrayType().equalsIgnoreCase("pneumonia") &&
+                !requestModel.getXrayType().equalsIgnoreCase("tuberculosis")) {
             response.setMessage("Invalid xray type");
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).
                     body(response);
@@ -96,7 +106,7 @@ public class UserDashboardController {
         uploadFileDto.setXrayId(UUID.randomUUID().toString());
         uploadFileDto.setFileName(requestModel.getFileName());
         uploadFileDto.setFileData(requestModel.getFileData());
-        patientDetailServiceImpl.uploadXRay(uploadFileDto);
+        userDashboardService.uploadXRay(uploadFileDto);
         response.setMessage("xray successfully saved");
         response.setXrayId(uploadFileDto.getXrayId());
         return ResponseEntity.status(HttpStatus.OK).
@@ -108,7 +118,11 @@ public class UserDashboardController {
         GenericDto genericDto = new GenericDto();
         genericDto.setUserId(genericRequestModel.getUserId());
         genericDto.setXrayId(genericRequestModel.getXrayId());
-        return ResponseEntity.ok().body(patientDetailServiceImpl.deleteXRay(genericDto));
+        HttpStatus httpStatus = userDashboardService.deleteXRay(genericDto);
+        if (httpStatus == HttpStatus.OK)
+            return ResponseEntity.status(HttpStatus.OK).body("Deleted successfully");
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("For given userId, xrayId, no xray is present");
     }
 
     @PostMapping("/updateXray")
@@ -120,14 +134,17 @@ public class UserDashboardController {
         uploadFileDto.setXrayId(requestModel.getXrayId());
         uploadFileDto.setFileName(requestModel.getFileName());
         uploadFileDto.setFileData(requestModel.getFileData());
-        return ResponseEntity.status(HttpStatus.OK).
-                body(patientDetailServiceImpl.updateXRay(uploadFileDto));
+        HttpStatus httpStatus = userDashboardService.updateXRay(uploadFileDto);
+        if (httpStatus == HttpStatus.OK)
+            return ResponseEntity.status(HttpStatus.OK).body("Updated successfully");
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("For given userId, xrayId, no xray is present");
     }
 
     @PostMapping("/list")
     public ResponseEntity<ListUserFilesResponseModel> listUserFiles(@RequestBody GenericRequestModel requestModel) {
         return ResponseEntity.ok().body(
-                patientDetailServiceImpl.listUserFiles(requestModel.getUserId()));
+                userDashboardService.listUserFiles(requestModel.getUserId()));
     }
 
 

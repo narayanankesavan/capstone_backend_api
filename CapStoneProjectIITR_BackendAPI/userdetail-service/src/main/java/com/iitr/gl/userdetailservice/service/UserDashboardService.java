@@ -3,13 +3,17 @@ package com.iitr.gl.userdetailservice.service;
 import com.iitr.gl.userdetailservice.shared.DownloadFileDto;
 import com.iitr.gl.userdetailservice.shared.GenericDto;
 import com.iitr.gl.userdetailservice.shared.UploadFileDto;
+import com.iitr.gl.userdetailservice.ui.model.ListUserFilesResponseModel;
+import org.springframework.http.HttpStatus;
 
 public interface UserDashboardService {
     public DownloadFileDto downloadXRay(DownloadFileDto downloadFileDto);
 
-    public UploadFileDto uploadXRay(UploadFileDto uploadFileDto);
+    public void uploadXRay(UploadFileDto uploadFileDto);
 
-    public String deleteXRay(GenericDto genericDto);
+    public HttpStatus deleteXRay(GenericDto genericDto);
 
-    String updateXRay(UploadFileDto fileDto);
+    public HttpStatus updateXRay(UploadFileDto fileDto);
+
+    public ListUserFilesResponseModel listUserFiles(String userId);
 }

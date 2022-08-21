@@ -4,9 +4,27 @@ public class DownloadFileDto {
     private String filename;
     private byte[] file;
     private String haspneumonia;
+    private String hastuberculosis;
     private String xrayId;
     private String userId;
     private String scriptId;
+    private String errorMessage;
+
+    public String getHastuberculosis() {
+        return hastuberculosis;
+    }
+
+    public void setHastuberculosis(String hastuberculosis) {
+        this.hastuberculosis = hastuberculosis;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
 
     public String getScriptId() {
         return scriptId;
