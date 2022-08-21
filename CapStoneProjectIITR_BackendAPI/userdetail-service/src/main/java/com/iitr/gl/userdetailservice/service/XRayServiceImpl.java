@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class UserDashboardServiceImpl implements UserDashboardService {
+public class XRayServiceImpl implements XRayService {
     @Autowired
     private PneumoniaXRayMongoDBRepository pneumoniaXRayMongoDBRepository;
     @Autowired

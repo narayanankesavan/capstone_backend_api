@@ -6,7 +6,7 @@ import com.iitr.gl.userdetailservice.shared.UploadFileDto;
 import com.iitr.gl.userdetailservice.ui.model.ListUserFilesResponseModel;
 import org.springframework.http.HttpStatus;
 
-public interface UserDashboardService {
+public interface XRayService {
     public DownloadFileDto downloadXRay(DownloadFileDto downloadFileDto);
 
     public void uploadXRay(UploadFileDto uploadFileDto);

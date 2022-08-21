@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "scriptDetail")
-public class ScriptDetailEntity implements Serializable {
+public class PythonScriptEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = 6211931924885054445L;
 
