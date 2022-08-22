@@ -5,4 +5,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PythonScriptMongoDBRepository extends MongoRepository<PythonScriptDocument, String> {
+    PythonScriptDocument findByScriptId(String scriptId);
+    void deleteByScriptId(String scriptId);
 }

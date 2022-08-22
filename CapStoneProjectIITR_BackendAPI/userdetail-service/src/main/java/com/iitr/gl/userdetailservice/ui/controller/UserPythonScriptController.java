@@ -1,7 +1,9 @@
 package com.iitr.gl.userdetailservice.ui.controller;
 
 import com.iitr.gl.userdetailservice.service.PythonScriptService;
+import com.iitr.gl.userdetailservice.shared.GenericDto;
 import com.iitr.gl.userdetailservice.shared.UploadFileDto;
+import com.iitr.gl.userdetailservice.ui.model.GenericRequestModel;
 import com.iitr.gl.userdetailservice.ui.model.UploadPythonScriptRequestModel;
 import com.iitr.gl.userdetailservice.ui.model.UploadPythonScriptResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,5 +37,38 @@ public class UserPythonScriptController {
         response.setScriptId(fileDto.getScriptId());
         return ResponseEntity.status(HttpStatus.OK).
                 body(response);
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<String> updatePythonScript(@RequestBody UploadPythonScriptRequestModel requestModel)
+    {
+        UploadFileDto fileDto = new UploadFileDto();
+        fileDto.setFileName(requestModel.getFileName());
+        fileDto.setFileData(requestModel.getData());
+        fileDto.setScriptId(requestModel.getScriptId());
+        fileDto.setUserId(requestModel.getUserId());
+        HttpStatus httpStatus = pythonScriptService.updatePythonScript(fileDto);
+        if(HttpStatus.OK == httpStatus)
+            return ResponseEntity.status(HttpStatus.OK).
+                    body("Successfully Updated");
+        else if(HttpStatus.NOT_FOUND == httpStatus)
+            return ResponseEntity.status(HttpStatus.OK).
+                    body("Python script with given scriptId/userId is not found");
+        return null;
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<String> deletePythonScript(@RequestBody GenericRequestModel requestModel)
+    {
+        GenericDto dto = new GenericDto();
+        dto.setScriptId(requestModel.getScriptId());
+        HttpStatus httpStatus = pythonScriptService.deletePythonScript(dto);
+        if(HttpStatus.OK == httpStatus)
+            return ResponseEntity.status(HttpStatus.OK).
+                    body("Successfully deleted");
+        else if(HttpStatus.NOT_FOUND == httpStatus)
+            return ResponseEntity.status(HttpStatus.OK).
+                    body("Python script with given scriptId/userId is not found");
+        return null;
     }
 }

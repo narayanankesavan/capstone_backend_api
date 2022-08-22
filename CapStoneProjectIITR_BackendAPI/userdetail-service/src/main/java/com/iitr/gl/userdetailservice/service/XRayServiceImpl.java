@@ -31,14 +31,12 @@ public class XRayServiceImpl implements XRayService {
         downloadFileDto = new DownloadFileDto();
         if (xRayDetailEntity != null) {
             if (xRayDetailEntity.getXrayType().equalsIgnoreCase("pneumonia")) {
-                PneumoniaXRayDocument pneumoniaXRayDocument = null;
-                pneumoniaXRayDocument = pneumoniaXRayMongoDBRepository.findByxrayId(downloadFileDto.getXrayId());
+                PneumoniaXRayDocument pneumoniaXRayDocument = pneumoniaXRayMongoDBRepository.findByxrayId(downloadFileDto.getXrayId());
                 downloadFileDto.setFile(pneumoniaXRayDocument.getData());
                 downloadFileDto.setFilename(pneumoniaXRayDocument.getFilename());
                 downloadFileDto.setXrayId(pneumoniaXRayDocument.getXrayId());
             } else if (xRayDetailEntity.getXrayType().equalsIgnoreCase("tuberculosis")) {
-                TuberculosisXRayDocument tuberculosisXRayDocument = null;
-                tuberculosisXRayDocument = tuberculosisXRayMongoDBRepository.findByxrayId(downloadFileDto.getXrayId());
+                TuberculosisXRayDocument tuberculosisXRayDocument = tuberculosisXRayMongoDBRepository.findByxrayId(downloadFileDto.getXrayId());
                 downloadFileDto.setFile(tuberculosisXRayDocument.getData());
                 downloadFileDto.setFilename(tuberculosisXRayDocument.getFilename());
                 downloadFileDto.setXrayId(tuberculosisXRayDocument.getXrayId());
