@@ -1,14 +1,19 @@
 package com.iitr.gl.userdetailservice.ui.controller;
 
 import com.iitr.gl.userdetailservice.service.PythonScriptService;
+import com.iitr.gl.userdetailservice.shared.DownloadFileDto;
 import com.iitr.gl.userdetailservice.shared.GenericDto;
 import com.iitr.gl.userdetailservice.shared.UploadFileDto;
 import com.iitr.gl.userdetailservice.ui.model.GenericRequestModel;
 import com.iitr.gl.userdetailservice.ui.model.UploadPythonScriptRequestModel;
 import com.iitr.gl.userdetailservice.ui.model.UploadPythonScriptResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,5 +75,37 @@ public class UserPythonScriptController {
             return ResponseEntity.status(HttpStatus.OK).
                     body("Python script with given scriptId/userId is not found");
         return null;
+    }
+
+    @PostMapping("/download")
+    public ResponseEntity<ByteArrayResource> downloadPythonScript(@RequestBody GenericRequestModel genericRequestModel) {
+        DownloadFileDto downloadFileDto = new DownloadFileDto();
+        downloadFileDto.setXrayId(genericRequestModel.getXrayId());
+        downloadFileDto.setUserId(genericRequestModel.getUserId());
+        DownloadFileDto file = pythonScriptService.downloadPythonScript(downloadFileDto);
+        if (file.getFile() != null) {
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType("text/plain"))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                    .body(new ByteArrayResource(file.getFile()));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(null);
+        }
+    }
+
+    @PostMapping("/view")
+    public ResponseEntity<String> viewPythonScript(@RequestBody GenericRequestModel genericRequestModel) {
+        DownloadFileDto downloadFileDto = new DownloadFileDto();
+        downloadFileDto.setXrayId(genericRequestModel.getXrayId());
+        downloadFileDto.setUserId(genericRequestModel.getUserId());
+        DownloadFileDto file = pythonScriptService.downloadPythonScript(downloadFileDto);
+        if (file.getFile() != null) {
+            return ResponseEntity.ok()
+                    .body(Base64Utils.encodeToString(file.getFile()));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(file.getErrorMessage());
+        }
     }
 }

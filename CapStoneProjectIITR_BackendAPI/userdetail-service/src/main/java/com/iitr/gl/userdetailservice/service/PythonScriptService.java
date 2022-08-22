@@ -9,5 +9,5 @@ public interface PythonScriptService {
     void uploadPythonScript(UploadFileDto fileDto);
     HttpStatus updatePythonScript(UploadFileDto fileDto);
     HttpStatus deletePythonScript(GenericDto dto);
-    DownloadFileDto downloadPythonScript(GenericDto dto);
+    DownloadFileDto downloadPythonScript(DownloadFileDto dto);
 }

@@ -66,7 +66,7 @@ public class PythonScriptServiceImpl implements PythonScriptService {
     }
 
     @Override
-    public DownloadFileDto downloadPythonScript(GenericDto dto)
+    public DownloadFileDto downloadPythonScript(DownloadFileDto dto)
     {
         PythonScriptEntity pythonScriptEntity = pythonScriptMySqlRepository.findByScriptIdAndUserId(dto.getScriptId(), dto.getUserId());
         DownloadFileDto downloadFileDto = new DownloadFileDto();
