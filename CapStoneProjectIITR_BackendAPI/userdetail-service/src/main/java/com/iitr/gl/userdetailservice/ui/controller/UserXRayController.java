@@ -129,12 +129,6 @@ public class UserXRayController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("For given userId, xrayId, no xray is present");
     }
 
-    @PostMapping("/list")
-    public ResponseEntity<ListUserFilesResponseModel> listUserFiles(@RequestBody GenericRequestModel requestModel) {
-        return ResponseEntity.ok().body(
-                XRayService.listUserFiles(requestModel.getUserId()));
-    }
-
     @PostMapping("/getToken")
     public void getToken(@RequestHeader("Authorization") String token) {
         System.out.println("Token : " + token);

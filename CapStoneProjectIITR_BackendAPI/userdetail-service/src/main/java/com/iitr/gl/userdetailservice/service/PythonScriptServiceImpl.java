@@ -7,11 +7,15 @@ import com.iitr.gl.userdetailservice.data.PythonScriptMySqlRepository;
 import com.iitr.gl.userdetailservice.shared.DownloadFileDto;
 import com.iitr.gl.userdetailservice.shared.GenericDto;
 import com.iitr.gl.userdetailservice.shared.UploadFileDto;
+import com.iitr.gl.userdetailservice.ui.model.ListUserFilesResponseModel;
+import com.iitr.gl.userdetailservice.ui.model.ScriptFileModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -81,5 +85,30 @@ public class PythonScriptServiceImpl implements PythonScriptService {
             downloadFileDto.setFile(null);
             return downloadFileDto;
         }
+    }
+
+    @Override
+    public List<ScriptFileModel> listUserFiles(String userId) {
+        List<PythonScriptEntity> pythonScriptEntities = pythonScriptMySqlRepository.findByUserId(userId);
+
+        if(pythonScriptEntities != null)
+        {
+            List<String> pythonScriptsIds = new ArrayList<>();
+            pythonScriptEntities.forEach(pythonScriptEntity -> pythonScriptsIds.add(pythonScriptEntity.getScriptId()));
+            List<PythonScriptDocument> pythonScriptDocumentList = pythonScriptMongoDBRepository.findAllUsingScriptId(pythonScriptsIds);
+
+            List<ScriptFileModel> scriptFileModelList = new ArrayList<>();
+            pythonScriptDocumentList.forEach(pythonScriptDocument -> {
+                ScriptFileModel scriptFileModel = new ScriptFileModel();
+                scriptFileModel.setFileData(Base64Utils.encodeToString(pythonScriptDocument.getData()));
+                scriptFileModel.setFileName(pythonScriptDocument.getFileName());
+                scriptFileModel.setScriptId(pythonScriptDocument.getScriptId());
+                scriptFileModelList.add(scriptFileModel);
+            });
+
+            return scriptFileModelList;
+        }
+        else
+            return null;
     }
 }
