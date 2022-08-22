@@ -24,6 +24,8 @@ public class UserDetailController {
     @PostMapping("/list")
     public ResponseEntity<ListUserFilesResponseModel> listUserFiles(@RequestBody GenericRequestModel requestModel) {
         ListUserFilesResponseModel listUserFilesResponseModel = xRayService.listUserFiles(requestModel.getUserId());
+        if(listUserFilesResponseModel == null)
+            listUserFilesResponseModel = new ListUserFilesResponseModel();
         listUserFilesResponseModel.setScripts(pythonScriptService.listUserFiles(requestModel.getUserId()));
         return ResponseEntity.ok().body(listUserFilesResponseModel);
     }
