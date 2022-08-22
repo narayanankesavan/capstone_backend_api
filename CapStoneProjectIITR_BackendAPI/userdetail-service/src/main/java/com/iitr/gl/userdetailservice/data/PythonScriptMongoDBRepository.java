@@ -9,6 +9,7 @@ import java.util.List;
 @Repository
 public interface PythonScriptMongoDBRepository extends MongoRepository<PythonScriptDocument, String> {
     PythonScriptDocument findByScriptId(String scriptId);
+
     void deleteByScriptId(String scriptId);
 
     @Query(value = "{'scriptId' : {$in: ?0} }")

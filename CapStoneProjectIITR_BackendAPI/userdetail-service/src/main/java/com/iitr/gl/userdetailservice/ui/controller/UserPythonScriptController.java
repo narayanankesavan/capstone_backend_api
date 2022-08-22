@@ -29,8 +29,7 @@ public class UserPythonScriptController {
     PythonScriptService pythonScriptService;
 
     @PostMapping("/upload")
-    public ResponseEntity<UploadPythonScriptResponseModel> uploadPythonScript(@RequestBody UploadPythonScriptRequestModel requestModel)
-    {
+    public ResponseEntity<UploadPythonScriptResponseModel> uploadPythonScript(@RequestBody UploadPythonScriptRequestModel requestModel) {
         UploadFileDto fileDto = new UploadFileDto();
         fileDto.setFileName(requestModel.getFileName());
         fileDto.setFileData(requestModel.getData());
@@ -45,33 +44,31 @@ public class UserPythonScriptController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<String> updatePythonScript(@RequestBody UploadPythonScriptRequestModel requestModel)
-    {
+    public ResponseEntity<String> updatePythonScript(@RequestBody UploadPythonScriptRequestModel requestModel) {
         UploadFileDto fileDto = new UploadFileDto();
         fileDto.setFileName(requestModel.getFileName());
         fileDto.setFileData(requestModel.getData());
         fileDto.setScriptId(requestModel.getScriptId());
         fileDto.setUserId(requestModel.getUserId());
         HttpStatus httpStatus = pythonScriptService.updatePythonScript(fileDto);
-        if(HttpStatus.OK == httpStatus)
+        if (HttpStatus.OK == httpStatus)
             return ResponseEntity.status(HttpStatus.OK).
                     body("Successfully Updated");
-        else if(HttpStatus.NOT_FOUND == httpStatus)
+        else if (HttpStatus.NOT_FOUND == httpStatus)
             return ResponseEntity.status(HttpStatus.OK).
                     body("Python script with given scriptId/userId is not found");
         return null;
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<String> deletePythonScript(@RequestBody GenericRequestModel requestModel)
-    {
+    public ResponseEntity<String> deletePythonScript(@RequestBody GenericRequestModel requestModel) {
         GenericDto dto = new GenericDto();
         dto.setScriptId(requestModel.getScriptId());
         HttpStatus httpStatus = pythonScriptService.deletePythonScript(dto);
-        if(HttpStatus.OK == httpStatus)
+        if (HttpStatus.OK == httpStatus)
             return ResponseEntity.status(HttpStatus.OK).
                     body("Successfully deleted");
-        else if(HttpStatus.NOT_FOUND == httpStatus)
+        else if (HttpStatus.NOT_FOUND == httpStatus)
             return ResponseEntity.status(HttpStatus.OK).
                     body("Python script with given scriptId/userId is not found");
         return null;

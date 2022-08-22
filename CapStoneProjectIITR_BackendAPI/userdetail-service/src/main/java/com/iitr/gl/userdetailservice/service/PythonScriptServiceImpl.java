@@ -7,7 +7,6 @@ import com.iitr.gl.userdetailservice.data.PythonScriptMySqlRepository;
 import com.iitr.gl.userdetailservice.shared.DownloadFileDto;
 import com.iitr.gl.userdetailservice.shared.GenericDto;
 import com.iitr.gl.userdetailservice.shared.UploadFileDto;
-import com.iitr.gl.userdetailservice.ui.model.ListUserFilesResponseModel;
 import com.iitr.gl.userdetailservice.ui.model.ScriptFileModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,7 +45,7 @@ public class PythonScriptServiceImpl implements PythonScriptService {
     public HttpStatus updatePythonScript(UploadFileDto fileDto) {
 
         PythonScriptEntity pythonScriptEntity = pythonScriptMySqlRepository.findByScriptIdAndUserId(fileDto.getScriptId(), fileDto.getUserId());
-        if(pythonScriptEntity != null) {
+        if (pythonScriptEntity != null) {
             PythonScriptDocument pythonScriptDocument = pythonScriptMongoDBRepository.findByScriptId(fileDto.getScriptId());
             pythonScriptDocument.setFileName(fileDto.getFileName());
             pythonScriptDocument.setData(Base64Utils.decodeFromString(fileDto.getFileData()));
@@ -58,10 +57,9 @@ public class PythonScriptServiceImpl implements PythonScriptService {
     }
 
     @Override
-    public HttpStatus deletePythonScript(GenericDto dto)
-    {
+    public HttpStatus deletePythonScript(GenericDto dto) {
         PythonScriptEntity pythonScriptEntity = pythonScriptMySqlRepository.findByScriptIdAndUserId(dto.getScriptId(), dto.getUserId());
-        if(pythonScriptEntity != null) {
+        if (pythonScriptEntity != null) {
             pythonScriptMongoDBRepository.deleteByScriptId(dto.getScriptId());
             pythonScriptMySqlRepository.deleteByScriptId(dto.getScriptId());
             return HttpStatus.OK;
@@ -70,17 +68,15 @@ public class PythonScriptServiceImpl implements PythonScriptService {
     }
 
     @Override
-    public DownloadFileDto downloadPythonScript(DownloadFileDto dto)
-    {
+    public DownloadFileDto downloadPythonScript(DownloadFileDto dto) {
         PythonScriptEntity pythonScriptEntity = pythonScriptMySqlRepository.findByScriptIdAndUserId(dto.getScriptId(), dto.getUserId());
         DownloadFileDto downloadFileDto = new DownloadFileDto();
-        if(pythonScriptEntity != null)
-        {
+        if (pythonScriptEntity != null) {
             PythonScriptDocument pythonScriptDocument = pythonScriptMongoDBRepository.findByScriptId(dto.getScriptId());
             downloadFileDto.setFilename(pythonScriptDocument.getFileName());
             downloadFileDto.setFile(pythonScriptDocument.getData());
             return downloadFileDto;
-        }else {
+        } else {
             downloadFileDto.setErrorMessage("For given userId, scriptId, no python script is found");
             downloadFileDto.setFile(null);
             return downloadFileDto;
@@ -91,8 +87,7 @@ public class PythonScriptServiceImpl implements PythonScriptService {
     public List<ScriptFileModel> listUserFiles(String userId) {
         List<PythonScriptEntity> pythonScriptEntities = pythonScriptMySqlRepository.findByUserId(userId);
 
-        if(pythonScriptEntities != null)
-        {
+        if (pythonScriptEntities != null) {
             List<String> pythonScriptsIds = new ArrayList<>();
             pythonScriptEntities.forEach(pythonScriptEntity -> pythonScriptsIds.add(pythonScriptEntity.getScriptId()));
             List<PythonScriptDocument> pythonScriptDocumentList = pythonScriptMongoDBRepository.findAllUsingScriptId(pythonScriptsIds);
@@ -107,8 +102,7 @@ public class PythonScriptServiceImpl implements PythonScriptService {
             });
 
             return scriptFileModelList;
-        }
-        else
+        } else
             return null;
     }
 }

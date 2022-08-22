@@ -1,7 +1,6 @@
 package com.iitr.gl.userdetailservice.ui.model;
 
-public class UploadPythonScriptResponseModel
-{
+public class UploadPythonScriptResponseModel {
     private String scriptId;
     private String message;
 

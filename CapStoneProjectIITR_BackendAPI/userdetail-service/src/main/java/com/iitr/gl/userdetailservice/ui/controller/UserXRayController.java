@@ -1,16 +1,13 @@
 package com.iitr.gl.userdetailservice.ui.controller;
 
-import com.iitr.gl.userdetailservice.data.PneumoniaXRayMongoDBRepository;
 import com.iitr.gl.userdetailservice.service.LoginServiceClient;
 import com.iitr.gl.userdetailservice.service.XRayService;
 import com.iitr.gl.userdetailservice.shared.DownloadFileDto;
 import com.iitr.gl.userdetailservice.shared.GenericDto;
 import com.iitr.gl.userdetailservice.shared.UploadFileDto;
 import com.iitr.gl.userdetailservice.ui.model.GenericRequestModel;
-import com.iitr.gl.userdetailservice.ui.model.ListUserFilesResponseModel;
 import com.iitr.gl.userdetailservice.ui.model.UploadXRayFileRequestModel;
 import com.iitr.gl.userdetailservice.ui.model.UploadXRayFileResponseModel;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

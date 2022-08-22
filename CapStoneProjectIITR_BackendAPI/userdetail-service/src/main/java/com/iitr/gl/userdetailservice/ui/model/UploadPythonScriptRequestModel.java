@@ -1,7 +1,6 @@
 package com.iitr.gl.userdetailservice.ui.model;
 
-public class UploadPythonScriptRequestModel
-{
+public class UploadPythonScriptRequestModel {
     private String fileName;
     private String data;
     private String userId;

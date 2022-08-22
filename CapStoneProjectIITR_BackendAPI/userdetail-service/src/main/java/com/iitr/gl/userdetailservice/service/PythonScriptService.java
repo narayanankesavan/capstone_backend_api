@@ -10,8 +10,12 @@ import java.util.List;
 
 public interface PythonScriptService {
     void uploadPythonScript(UploadFileDto fileDto);
+
     HttpStatus updatePythonScript(UploadFileDto fileDto);
+
     HttpStatus deletePythonScript(GenericDto dto);
+
     DownloadFileDto downloadPythonScript(DownloadFileDto dto);
+
     List<ScriptFileModel> listUserFiles(String userId);
 }
