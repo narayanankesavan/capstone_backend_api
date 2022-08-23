@@ -1,7 +1,6 @@
 package com.iitr.gl.userdetailservice.shared;
 
-public class AdminDashboardDto
-{
+public class AdminDashboardDto {
     private String firstName;
     private String lastName;
     private String email;

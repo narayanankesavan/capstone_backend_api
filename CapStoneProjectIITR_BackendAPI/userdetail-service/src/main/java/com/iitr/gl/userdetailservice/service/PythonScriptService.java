@@ -18,4 +18,6 @@ public interface PythonScriptService {
     DownloadFileDto downloadPythonScript(DownloadFileDto dto);
 
     List<ScriptFileModel> listUserFiles(String userId);
+
+    HttpStatus deleteAllPythonScript(String userId);
 }

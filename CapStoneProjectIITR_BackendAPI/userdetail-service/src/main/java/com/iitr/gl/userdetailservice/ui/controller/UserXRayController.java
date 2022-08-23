@@ -110,8 +110,21 @@ public class UserXRayController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("For given userId, xrayId, no xray is present");
     }
 
+    @PostMapping("/deleteAll")
+    public ResponseEntity<String> deleteAllXray(@RequestBody GenericRequestModel requestModel) {
+        HttpStatus httpStatus = XRayService.deleteAllXRay(requestModel.getUserId());
+        if (HttpStatus.OK == httpStatus)
+            return ResponseEntity.status(HttpStatus.OK).
+                    body("Successfully deleted");
+        else if (HttpStatus.NOT_FOUND == httpStatus)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).
+                    body("XRays with given userId are not found");
+        return null;
+    }
+
+
     @PostMapping("/update")
-    public ResponseEntity<String> updateXRay(@RequestBody UploadXRayFileRequestModel requestModel) {
+    public ResponseEntity<String> updateXray(@RequestBody UploadXRayFileRequestModel requestModel) {
         UploadFileDto uploadFileDto = new UploadFileDto();
         UploadXRayFileResponseModel response = new UploadXRayFileResponseModel();
 

@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface AdminService {
     HttpStatus upgradeUserToAdmin(GenericDto dto);
+
     List<AdminDashboardDto> listUsers();
 
     HttpStatus deleteUser(String userId);

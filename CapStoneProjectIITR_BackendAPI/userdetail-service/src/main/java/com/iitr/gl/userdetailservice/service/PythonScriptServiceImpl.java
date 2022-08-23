@@ -68,6 +68,24 @@ public class PythonScriptServiceImpl implements PythonScriptService {
     }
 
     @Override
+    public HttpStatus deleteAllPythonScript(String userId) {
+        List<PythonScriptEntity> pythonScriptEntityList = pythonScriptMySqlRepository.findByUserId(userId);
+        if (pythonScriptEntityList != null) {
+            List<String> pythonScriptIds = new ArrayList<>();
+            pythonScriptEntityList.forEach(pythonScriptEntity -> {
+                pythonScriptIds.add(pythonScriptEntity.getScriptId());
+            });
+
+            if (!pythonScriptIds.isEmpty())
+                pythonScriptMongoDBRepository.deleteAllUsingScriptId(pythonScriptIds);
+
+            return HttpStatus.OK;
+        }
+
+        return HttpStatus.NOT_FOUND;
+    }
+
+    @Override
     public DownloadFileDto downloadPythonScript(DownloadFileDto dto) {
         PythonScriptEntity pythonScriptEntity = pythonScriptMySqlRepository.findByScriptIdAndUserId(dto.getScriptId(), dto.getUserId());
         DownloadFileDto downloadFileDto = new DownloadFileDto();

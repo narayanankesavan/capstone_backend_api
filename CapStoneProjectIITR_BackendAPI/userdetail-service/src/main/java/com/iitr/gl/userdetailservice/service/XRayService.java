@@ -7,13 +7,15 @@ import com.iitr.gl.userdetailservice.ui.model.ListUserFilesResponseModel;
 import org.springframework.http.HttpStatus;
 
 public interface XRayService {
-    public DownloadFileDto downloadXRay(DownloadFileDto downloadFileDto);
+    DownloadFileDto downloadXRay(DownloadFileDto downloadFileDto);
 
-    public void uploadXRay(UploadFileDto uploadFileDto);
+    void uploadXRay(UploadFileDto uploadFileDto);
 
-    public HttpStatus deleteXRay(GenericDto genericDto);
+    HttpStatus deleteXRay(GenericDto genericDto);
 
-    public HttpStatus updateXRay(UploadFileDto fileDto);
+    HttpStatus updateXRay(UploadFileDto fileDto);
 
-    public ListUserFilesResponseModel listUserFiles(String userId);
+    ListUserFilesResponseModel listUserFiles(String userId);
+
+    HttpStatus deleteAllXRay(String userId);
 }

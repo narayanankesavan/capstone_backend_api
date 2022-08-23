@@ -42,8 +42,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<AdminDashboardDto> listUsers()
-    {
+    public List<AdminDashboardDto> listUsers() {
         List<UserEntity> userEntityList = userRepository.findAll();
         List<AdminDashboardDto> adminDashboardDtoList = new ArrayList<>();
         userEntityList.forEach(userEntity -> {
@@ -60,38 +59,34 @@ public class AdminServiceImpl implements AdminService {
 
     @Transactional
     @Override
-    public HttpStatus deleteUser(String userId)
-    {
+    public HttpStatus deleteUser(String userId) {
         UserEntity userEntity = userRepository.findByUserId(userId);
-        if(userEntity != null)
-        {
+        if (userEntity != null) {
             List<XRayDetailEntity> xRayDetailEntityList = xRayDetailMySqlRepository.findByUserId(userId);
             List<PythonScriptEntity> pythonScriptEntityList = pythonScriptMySqlRepository.findByUserId(userId);
-            if(xRayDetailEntityList != null)
-            {
+            if (xRayDetailEntityList != null) {
                 List<String> pneumoniaXrayIds = new ArrayList<>();
                 List<String> tuberculosisXrayIds = new ArrayList<>();
                 xRayDetailEntityList.forEach(xRayDetailEntity -> {
-                    if(xRayDetailEntity.getXrayType().equalsIgnoreCase("pneumonia"))
+                    if (xRayDetailEntity.getXrayType().equalsIgnoreCase("pneumonia"))
                         pneumoniaXrayIds.add(xRayDetailEntity.getXrayId());
-                    else if(xRayDetailEntity.getXrayType().equalsIgnoreCase("tuberculosis"))
+                    else if (xRayDetailEntity.getXrayType().equalsIgnoreCase("tuberculosis"))
                         tuberculosisXrayIds.add(xRayDetailEntity.getXrayId());
                 });
 
-                if(!pneumoniaXrayIds.isEmpty())
+                if (!pneumoniaXrayIds.isEmpty())
                     pneumoniaXRayMongoDBRepository.deleteAllUsingXrayId(pneumoniaXrayIds);
-                if(!tuberculosisXrayIds.isEmpty())
+                if (!tuberculosisXrayIds.isEmpty())
                     tuberculosisXRayMongoDBRepository.deleteAllUsingXrayId(tuberculosisXrayIds);
             }
 
-            if(pythonScriptEntityList != null)
-            {
+            if (pythonScriptEntityList != null) {
                 List<String> pythonScriptIds = new ArrayList<>();
                 pythonScriptEntityList.forEach(pythonScriptEntity -> {
                     pythonScriptIds.add(pythonScriptEntity.getScriptId());
                 });
 
-                if(!pythonScriptIds.isEmpty())
+                if (!pythonScriptIds.isEmpty())
                     pythonScriptMongoDBRepository.deleteAllUsingScriptId(pythonScriptIds);
             }
 
@@ -100,8 +95,7 @@ public class AdminServiceImpl implements AdminService {
             userRepository.deleteByUserId(userId);
 
             return HttpStatus.OK;
-        }
-        else
+        } else
             return HttpStatus.NOT_FOUND;
     }
 }

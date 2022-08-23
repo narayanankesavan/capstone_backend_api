@@ -74,6 +74,18 @@ public class UserPythonScriptController {
         return null;
     }
 
+    @PostMapping("/deleteAll")
+    public ResponseEntity<String> deleteAllPythonScript(@RequestBody GenericRequestModel requestModel) {
+        HttpStatus httpStatus = pythonScriptService.deleteAllPythonScript(requestModel.getUserId());
+        if (HttpStatus.OK == httpStatus)
+            return ResponseEntity.status(HttpStatus.OK).
+                    body("Successfully deleted");
+        else if (HttpStatus.NOT_FOUND == httpStatus)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).
+                    body("Python scripts with given userId are not found");
+        return null;
+    }
+
     @PostMapping("/download")
     public ResponseEntity<ByteArrayResource> downloadPythonScript(@RequestBody GenericRequestModel genericRequestModel) {
         DownloadFileDto downloadFileDto = new DownloadFileDto();

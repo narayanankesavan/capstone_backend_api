@@ -94,6 +94,33 @@ public class XRayServiceImpl implements XRayService {
     }
 
     @Override
+    public HttpStatus deleteAllXRay(String userId) {
+        List<XRayDetailEntity> xRayDetailEntityList = xRayDetailMySqlRepository.findByUserId(userId);
+
+        if (xRayDetailEntityList != null) {
+            List<String> pneumoniaXrayIds = new ArrayList<>();
+            List<String> tuberculosisXrayIds = new ArrayList<>();
+            xRayDetailEntityList.forEach(xRayDetailEntity -> {
+                if (xRayDetailEntity.getXrayType().equalsIgnoreCase("pneumonia"))
+                    pneumoniaXrayIds.add(xRayDetailEntity.getXrayId());
+                else if (xRayDetailEntity.getXrayType().equalsIgnoreCase("tuberculosis"))
+                    tuberculosisXrayIds.add(xRayDetailEntity.getXrayId());
+            });
+
+            if (!pneumoniaXrayIds.isEmpty())
+                pneumoniaXRayMongoDBRepository.deleteAllUsingXrayId(pneumoniaXrayIds);
+            if (!tuberculosisXrayIds.isEmpty())
+                tuberculosisXRayMongoDBRepository.deleteAllUsingXrayId(tuberculosisXrayIds);
+
+            return HttpStatus.OK;
+        }
+
+        return HttpStatus.NOT_FOUND;
+
+    }
+
+
+    @Override
     public HttpStatus updateXRay(UploadFileDto fileDto) {
         XRayDetailEntity xRayDetailEntity = xRayDetailMySqlRepository.findByXrayIdAndUserId(fileDto.getXrayId(), fileDto.getUserId());
 
