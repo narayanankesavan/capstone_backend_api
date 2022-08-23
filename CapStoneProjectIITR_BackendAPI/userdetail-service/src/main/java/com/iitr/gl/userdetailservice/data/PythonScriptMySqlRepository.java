@@ -10,6 +10,6 @@ public interface PythonScriptMySqlRepository extends JpaRepository<PythonScriptE
 
     List<PythonScriptEntity> findByUserId(String userId);
 
-    @Transactional
     void deleteByScriptId(String scriptId);
+    void deleteByUserId(String userId);
 }

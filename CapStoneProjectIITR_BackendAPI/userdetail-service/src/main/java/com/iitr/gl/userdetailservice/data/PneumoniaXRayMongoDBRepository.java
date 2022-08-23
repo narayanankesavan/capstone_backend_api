@@ -15,4 +15,7 @@ public interface PneumoniaXRayMongoDBRepository extends MongoRepository<Pneumoni
     @Query(value = "{'xrayid' : {$in: ?0} }")
     List<PneumoniaXRayDocument> findAllUsingXrayId(List<String> xrayids);
 
+    @Query(value = "{'xrayid' : {$in: ?0} }", delete = true)
+    void deleteAllUsingXrayId(List<String> xrayids);
+
 }

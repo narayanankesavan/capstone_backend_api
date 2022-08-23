@@ -14,4 +14,7 @@ public interface PythonScriptMongoDBRepository extends MongoRepository<PythonScr
 
     @Query(value = "{'scriptId' : {$in: ?0} }")
     List<PythonScriptDocument> findAllUsingScriptId(List<String> scriptId);
+
+    @Query(value = "{'scriptId' : {$in: ?0} }", delete = true)
+    void deleteAllUsingScriptId(List<String> scriptId);
 }

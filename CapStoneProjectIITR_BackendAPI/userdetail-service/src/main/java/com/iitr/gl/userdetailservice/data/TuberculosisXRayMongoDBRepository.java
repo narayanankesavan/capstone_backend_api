@@ -15,4 +15,7 @@ public interface TuberculosisXRayMongoDBRepository extends MongoRepository<Tuber
     @Query(value = "{'xrayid' : {$in: ?0} }")
     List<TuberculosisXRayDocument> findAllUsingXrayId(List<String> xrayids);
 
+    @Query(value = "{'xrayid' : {$in: ?0} }", delete = true)
+    void deleteAllUsingXrayId(List<String> xrayids);
+
 }

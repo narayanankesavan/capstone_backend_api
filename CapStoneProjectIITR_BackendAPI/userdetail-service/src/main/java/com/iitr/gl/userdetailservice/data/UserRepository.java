@@ -14,4 +14,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Modifying
     @Query("update UserEntity u set u.adminUser=true where u.userId=?1")
     int upgradeUserToAdmin(String userId);
+
+    UserEntity findByUserId(String userId);
+
+    void deleteByUserId(String userId);
 }
