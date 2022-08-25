@@ -1,4 +1,4 @@
-package com.iitr.gl.dashboardservice;
+package com.iitr.gl.executeCode;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/pythonIde/")
-public class DashboardController {
+public class ExecutePython {
 
     @PostMapping(value = "/runPy", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Object> runPythonScript(@RequestBody String body) {
