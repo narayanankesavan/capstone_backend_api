@@ -24,6 +24,17 @@ public class UserEntity implements Serializable {
     @Column(nullable = false, unique = true)
     private String encryptedPassword;
 
+    @Column(nullable = false)
+    private boolean adminUser;
+
+    public boolean isAdminUser() {
+        return adminUser;
+    }
+
+    public void setAdminUser(boolean adminUser) {
+        this.adminUser = adminUser;
+    }
+
     public long getId() {
         return id;
     }

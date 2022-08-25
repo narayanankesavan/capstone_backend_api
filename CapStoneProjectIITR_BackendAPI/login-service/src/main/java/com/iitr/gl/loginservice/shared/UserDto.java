@@ -13,6 +13,16 @@ public class UserDto implements Serializable {
     private String password;
     private String encryptedPassword;
 
+    private boolean adminUser;
+
+    public boolean isAdminUser() {
+        return adminUser;
+    }
+
+    public void setAdminUser(boolean adminUser) {
+        this.adminUser = adminUser;
+    }
+
     public String getFirstName() {
         return firstName;
     }

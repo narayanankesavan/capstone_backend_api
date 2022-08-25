@@ -6,6 +6,7 @@ import com.iitr.gl.loginservice.shared.UserDto;
 import com.iitr.gl.loginservice.ui.model.UserLoginDetailRequest;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -56,7 +57,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         UserDto userDto = loginService.getUserByEmail(userEmail);
 
         String jwtToken = Jwts.builder().
-                setSubject(userDto.getUserId()).
+                setSubject(userDto.getUserId() + ":::" + userDto.isAdminUser() + ":::" + RandomStringUtils.random(10, true, true)).
                 setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(environment.getProperty("token.expiration_time")))).
                 signWith(SignatureAlgorithm.HS512, environment.getProperty("token.secret")).
                 compact();

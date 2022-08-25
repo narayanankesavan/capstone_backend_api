@@ -44,6 +44,7 @@ public class AuthorizationTokenFilter extends AbstractGatewayFilterFactory<Autho
             String subject = Jwts.parser().
                     setSigningKey(environment.getProperty("token.secret")).parseClaimsJws(jwt).
                     getBody().getSubject();
+            System.out.println("Subject : " + subject);
             if (subject == null || subject.isEmpty())
                 return false;
         } catch (Exception e) {

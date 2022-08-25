@@ -1,5 +1,6 @@
 package com.iitr.gl.userdetailservice;
 
+import com.iitr.gl.userdetailservice.util.GetJwtSubject;
 import feign.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,4 +21,13 @@ public class UserdetailServiceApplication {
     Logger.Level setFeignLoggerLevel() {
         return Logger.Level.FULL;
     }
+
+    @Bean
+    public GetJwtSubject getJwtSubject() {
+        return new GetJwtSubject();
+    }
+
 }
+
+
+
