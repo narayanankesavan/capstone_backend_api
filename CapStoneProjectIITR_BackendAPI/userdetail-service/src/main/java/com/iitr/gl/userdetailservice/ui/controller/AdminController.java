@@ -1,5 +1,6 @@
 package com.iitr.gl.userdetailservice.ui.controller;
 
+import com.iitr.gl.userdetailservice.exception.UnauthorizedException;
 import com.iitr.gl.userdetailservice.service.AdminService;
 import com.iitr.gl.userdetailservice.shared.AdminDashboardDto;
 import com.iitr.gl.userdetailservice.shared.GenericDto;
@@ -27,7 +28,9 @@ public class AdminController {
     GetJwtSubject getJwtSubject;
 
     @PostMapping("/upgradeUserToAdmin")
-    public String upgradeUserToAdmin(@RequestBody GenericRequestModel requestModel) {
+    public String upgradeUserToAdmin(@RequestBody GenericRequestModel requestModel, @RequestHeader("Authorization") String token)
+            throws UnauthorizedException {
+        verifyIfAuthorized(token, requestModel.getUserId());
         GenericDto dto = new GenericDto();
         dto.setUserId(requestModel.getUserId());
         HttpStatus status = adminService.upgradeUserToAdmin(dto);
@@ -38,15 +41,16 @@ public class AdminController {
     }
 
     @PostMapping("/listUsers")
-    public List<AdminDashboardDto> listUsers(@RequestHeader("Authorization") String token) {
-
-        System.out.println("Subject : " + getJwtSubject.getSubject(token.replace("Bearer", ""), environment));
-
+    public List<AdminDashboardDto> listUsers(@RequestBody GenericDto dto, @RequestHeader("Authorization") String token)
+            throws UnauthorizedException {
+        verifyIfAuthorized(token, dto.getUserId());
         return adminService.listUsers();
     }
 
     @PostMapping("/deleteUser")
-    ResponseEntity<String> deleteUser(@RequestBody GenericDto dto) {
+    ResponseEntity<String> deleteUser(@RequestBody GenericDto dto, @RequestHeader("Authorization") String token)
+            throws UnauthorizedException {
+        verifyIfAuthorized(token, dto.getUserId());
         HttpStatus httpStatus = adminService.deleteUser(dto.getUserId());
 
         if (HttpStatus.OK == httpStatus)
@@ -57,6 +61,11 @@ public class AdminController {
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).
                 body("");
+    }
+
+    private void verifyIfAuthorized(String token, String userId) {
+        if (!getJwtSubject.isAuthorized(token.replace("Bearer", ""), environment, userId, true))
+            throw new UnauthorizedException("You are not authorized");
     }
 
 }

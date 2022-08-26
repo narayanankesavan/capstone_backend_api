@@ -53,11 +53,10 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
 
         String userEmail = ((User) (authResult.getPrincipal())).getUsername();
-        System.out.println(userEmail + " &&&&&&&&&&&&&&&&&&&&&&&&&&&&");
         UserDto userDto = loginService.getUserByEmail(userEmail);
 
         String jwtToken = Jwts.builder().
-                setSubject(userDto.getUserId() + ":::" + userDto.isAdminUser() + ":::" + RandomStringUtils.random(10, true, true)).
+                setSubject(userDto.getUserId() + ":::" + userDto.isAdminUser() + ":::" + RandomStringUtils.random(40, true, true)).
                 setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(environment.getProperty("token.expiration_time")))).
                 signWith(SignatureAlgorithm.HS512, environment.getProperty("token.secret")).
                 compact();

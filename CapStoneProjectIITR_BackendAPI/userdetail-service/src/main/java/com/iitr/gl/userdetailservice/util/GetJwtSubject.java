@@ -6,10 +6,19 @@ import org.springframework.core.env.Environment;
 
 public class GetJwtSubject {
 
-    public String getSubject(String jwt, Environment environment) {
+    public boolean isAuthorized(String jwt, Environment environment, String userId, boolean isAdmin) {
         String subject = Jwts.parser().
                 setSigningKey(environment.getProperty("token.secret")).parseClaimsJws(jwt).
                 getBody().getSubject();
-        return subject;
+        String[] userDetail = subject.split(":::");
+        if (isAdmin) {
+            if (userDetail[1].equals("true"))
+                return true;
+            else return false;
+        } else {
+            if (!userDetail[1].equals("true") && userDetail[0].equals(userId))
+                return true;
+            else return false;
+        }
     }
 }
