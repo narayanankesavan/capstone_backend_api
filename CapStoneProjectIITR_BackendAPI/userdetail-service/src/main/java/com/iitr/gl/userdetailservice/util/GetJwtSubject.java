@@ -1,5 +1,6 @@
 package com.iitr.gl.userdetailservice.util;
 
+import com.iitr.gl.userdetailservice.exception.UnauthorizedException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.core.env.Environment;
 
@@ -20,5 +21,10 @@ public class GetJwtSubject {
                 return true;
             else return false;
         }
+    }
+
+    public void verifyIfAuthorized(String token, String userId, Environment environment, boolean isAdmin) {
+        if (!isAuthorized(token.replace("Bearer", ""), environment, userId, isAdmin))
+            throw new UnauthorizedException("You are not authorized");
     }
 }
